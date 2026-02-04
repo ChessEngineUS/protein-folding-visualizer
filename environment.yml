@@ -1,0 +1,34 @@
+name: protein-viz
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+  - pytorch
+dependencies:
+  - python=3.11
+  - pip
+  - numpy>=1.24
+  - scipy>=1.10
+  - pandas>=2.0
+  - matplotlib>=3.7
+  - seaborn>=0.12
+  - jupyter
+  - ipywidgets
+  - biopython>=1.81
+  - rdkit>=2023.3
+  - pytorch>=2.0
+  - pytorch-cuda=12.1
+  - cudatoolkit=12.1
+  - pip:
+    - py3Dmol>=2.0.0
+    - nglview>=3.0.0
+    - plotly>=5.14.0
+    - pyyaml>=6.0
+    - h5py>=3.8.0
+    - pytest>=7.3.0
+    - pytest-cov>=4.0.0
+    - black>=23.3.0
+    - flake8>=6.0.0
+    - mypy>=1.2.0
+    - click>=8.1.0
+    - tqdm>=4.65.0
