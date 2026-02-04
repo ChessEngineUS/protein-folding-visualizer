@@ -1,0 +1,72 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Protein Folding Visualizer: AlphaFold 3 & Boltz-2"
+version: 0.1.0
+date-released: 2026-02-04
+url: "https://github.com/ChessEngineUS/protein-folding-visualizer"
+repository-code: "https://github.com/ChessEngineUS/protein-folding-visualizer"
+type: software
+license: MIT
+
+authors:
+  - family-names: "Marena"
+    given-names: "Tommaso R."
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+    affiliation: "Independent Researcher"
+
+keywords:
+  - protein structure prediction
+  - AlphaFold 3
+  - Boltz-2
+  - binding affinity
+  - CASP15
+  - machine learning
+  - structural biology
+  - drug discovery
+  - computational biology
+
+abstract: |
+  A unified framework for state-of-the-art protein structure prediction 
+  and binding affinity calculation using AlphaFold 3 and Boltz-2. Features 
+  comprehensive CASP15 benchmarking, ensemble uncertainty quantification, 
+  interactive 3D visualization, and Google Colab integration for 
+  zero-installation usage.
+
+preferred-citation:
+  type: software
+  title: "Protein Folding Visualizer: Unified Framework for AlphaFold 3 and Boltz-2 with CASP15 Benchmarking"
+  authors:
+    - family-names: "Marena"
+      given-names: "Tommaso R."
+  year: 2026
+  url: "https://github.com/ChessEngineUS/protein-folding-visualizer"
+
+references:
+  - type: article
+    title: "Accurate structure prediction of biomolecular interactions with AlphaFold 3"
+    authors:
+      - family-names: "Abramson"
+        given-names: "Josh"
+    journal: "Nature"
+    year: 2024
+    doi: "10.1038/s41586-024-07487-w"
+    
+  - type: article
+    title: "Highly accurate protein structure prediction with AlphaFold"
+    authors:
+      - family-names: "Jumper"
+        given-names: "John"
+    journal: "Nature"
+    volume: 596
+    pages: "583-589"
+    year: 2021
+    doi: "10.1038/s41586-021-03819-2"
+    
+  - type: article
+    title: "Boltz-2: Rapid binding affinity prediction"
+    authors:
+      - family-names: "Wohlwend"
+        given-names: "Jeremy"
+    journal: "bioRxiv"
+    year: 2025
+    doi: "10.1101/2025.06.14.659707"
