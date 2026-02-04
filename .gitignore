@@ -24,13 +24,10 @@ share/python-wheels/
 PIPFILE.lock
 
 # Virtual environments
-.env
-.venv
-env/
 venv/
 ENV/
-env.bak/
-venv.bak/
+env/
+.venv
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -39,46 +36,62 @@ venv.bak/
 # PyCharm
 .idea/
 
-# VSCode
+# VS Code
 .vscode/
 
-# Model weights (too large for git)
-models/
-*.pth
-*.pt
-*.ckpt
-*.weights
+# Model weights and data (large files)
+models/alphafold3/*.tar.gz
+models/alphafold3/*.pth
+models/alphafold3/weights/
+models/boltz2/*.zip
+models/boltz2/*.pth
+models/boltz2/weights/
 
-# Data files
+# Databases
+databases/
+*.fasta.gz
+*.mmcif
+*.cif
+
+# Output files
 data/outputs/
-data/downloads/
+benchmarks/*/
 *.pdb
 *.cif
-*.mmcif
-*.msa
-*.a3m
-*.sto
-
-# Logs
 *.log
-logs/
-
-# OS
-.DS_Store
-Thumbs.db
 
 # Temporary files
 *.tmp
-*.bak
-*.swp
-*~
+*.temp
+.cache/
 
-# Test coverage
-.coverage
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing
 .pytest_cache/
+.coverage
 htmlcov/
+*.cover
+.hypothesis/
 
 # MyPy
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Profiling
+*.prof
+
+# Documentation builds
+docs/_build/
+docs/_static/
+docs/_templates/
+
+# Keep directory structure but ignore contents
+!data/examples/.gitkeep
+!data/outputs/.gitkeep
+!models/alphafold3/.gitkeep
+!models/boltz2/.gitkeep
+!benchmarks/.gitkeep
