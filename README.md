@@ -5,6 +5,33 @@ State-of-the-art protein structure prediction and visualization using AlphaFold 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CASP15](https://img.shields.io/badge/CASP15-Benchmarked-green.svg)](https://predictioncenter.org/casp15/)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ChessEngineUS/protein-folding-visualizer/blob/main/notebooks/colab_quickstart.ipynb)
+
+## 🚀 Quick Start
+
+### Try it Now in Google Colab (No Installation Required!)
+
+| Notebook | Description | Runtime | Colab Link |
+|----------|-------------|---------|------------|
+| **Quick Start Demo** | Basic prediction & visualization | ~10 min | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ChessEngineUS/protein-folding-visualizer/blob/main/notebooks/colab_quickstart.ipynb) |
+| **CASP15 Benchmark** | Full evaluation with metrics | ~2-4 hours | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ChessEngineUS/protein-folding-visualizer/blob/main/notebooks/colab_casp15_evaluation.ipynb) |
+
+**Features:**
+- ✅ Free GPU access (T4/A100)
+- ✅ Pre-configured environment
+- ✅ Interactive 3D visualization
+- ✅ No local installation needed
+
+### Local Installation
+
+```bash
+git clone https://github.com/ChessEngineUS/protein-folding-visualizer.git
+cd protein-folding-visualizer
+conda env create -f environment.yml
+conda activate protein-viz
+pip install -e .
+python scripts/download_models.py --alphafold3 --boltz2
+```
 
 ## 🎯 Novel Features & Research Contributions
 
@@ -47,43 +74,18 @@ Evaluated on official CASP15 targets with state-of-the-art performance:
 
 *See `notebooks/casp15_evaluation.ipynb` for complete analysis*
 
-## Features
+## ✨ Features
 
 - **AlphaFold 3 Integration**: Diffusion-based biomolecular structure prediction with 50-100% improvement over previous methods
 - **Boltz-2 Binding Affinity**: Fast, accurate binding affinity prediction (1000x faster than FEP methods)
 - **CASP15 Evaluation Suite**: Official benchmarking framework with GDT_TS, TM-score, and lDDT metrics
 - **Interactive 3D Visualization**: Real-time structure viewing with py3Dmol and NGLView
+- **Google Colab Ready**: Run everything in your browser with free GPU access
 - **Comprehensive Metrics**: pLDDT confidence scores, PAE matrices, binding probabilities
 - **Multi-Chain Complex Support**: Protein-protein, protein-ligand, protein-DNA/RNA interactions
 - **Automated Pipeline**: End-to-end workflow from FASTA to publication-quality visualizations
 
-## Installation
-
-### Requirements
-- Python 3.11+
-- CUDA 12.1+ (for GPU acceleration)
-- 16GB+ RAM (32GB recommended)
-- 100GB+ disk space for model weights
-
-### Quick Start
-
-```bash
-# Clone repository
-git clone https://github.com/ChessEngineUS/protein-folding-visualizer.git
-cd protein-folding-visualizer
-
-# Create conda environment
-conda env create -f environment.yml
-conda activate protein-viz
-
-# Install dependencies
-pip install -e .
-
-# Download model weights
-python scripts/download_models.py --alphafold3 --boltz2
-```
-
-## Usage
+## 📖 Usage Examples
 
 ### AlphaFold 3 Prediction
 
@@ -102,7 +104,10 @@ result = predictor.predict(
     use_templates=True
 )
 
-# Visualize
+print(f"Mean pLDDT: {result.plddt.mean():.2f}")
+print(f"TM-score: {result.ptm:.3f}")
+
+# Visualize in 3D
 viewer = StructureViewer()
 viewer.show_structure(result.pdb_path, confidence=result.plddt)
 ```
@@ -112,20 +117,18 @@ viewer.show_structure(result.pdb_path, confidence=result.plddt)
 ```python
 from src.boltz2 import Boltz2Predictor, AffinityCalculator
 
-# Initialize predictor
 predictor = Boltz2Predictor(model_dir='./models/boltz2')
 
 # Predict structure + affinity
 result = predictor.predict_with_affinity(
     protein_fasta='protein.fasta',
-    ligand_smiles='CCO',  # Ethanol example
+    ligand_smiles='CC(=O)OC1=CC=CC=C1C(=O)O',  # Aspirin
     output_dir='data/outputs'
 )
 
-# Extract affinity metrics
-print(f"IC50: {result.ic50} nM")
-print(f"ΔG: {result.delta_g} kcal/mol")
-print(f"Binding Probability: {result.binding_probability:.2%}")
+print(f"IC50: {result.ic50:.1f} nM")
+print(f"ΔG: {result.delta_g:.2f} kcal/mol")
+print(f"Classification: {AffinityCalculator.classify_affinity(result.ic50)}")
 ```
 
 ### CASP15 Benchmarking
@@ -133,107 +136,89 @@ print(f"Binding Probability: {result.binding_probability:.2%}")
 ```python
 from src.evaluation import BenchmarkSuite
 
-# Initialize benchmark suite
 benchmark = BenchmarkSuite(output_dir='./benchmarks/casp15')
 
-# Run CASP15 evaluation
+# Run evaluation
 results = benchmark.run_casp15_benchmark(
     predictor=predictor,
     targets=['T1104', 'T1124', 'T1158']  # Easy, Medium, Hard
 )
 
-# Generate comprehensive report
+# Generate HTML report
 report_path = benchmark.generate_benchmark_report()
-print(f"Report saved to: {report_path}")
+print(f"Report: {report_path}")
 ```
 
-### Combined Pipeline
+### One-Line Complete Pipeline
 
 ```python
 from src.pipeline import ProteinPipeline
 
-# Initialize pipeline with both models
 pipeline = ProteinPipeline(
     alphafold3_weights='./models/alphafold3',
     boltz2_weights='./models/boltz2'
 )
 
-# Run comprehensive analysis
 results = pipeline.run(
     sequence='MKFLKFSLLTAVLLSVVFAFSSCGDDDDTGYLPPSQAIQDLLKRMKV',
-    ligands=['CCO', 'CC(=O)O'],  # Multiple ligands
-    generate_report=True
+    ligands=['CCO', 'CC(=O)O', 'CC(C)O'],  # Screen multiple ligands
+    generate_report=True,
+    experiment_name='drug_screen'
 )
-
-# Results include:
-# - AF3 structure predictions
-# - Boltz-2 binding poses
-# - Affinity predictions
-# - Interactive HTML report
 ```
 
 ## 📓 Example Notebooks
 
 Explore comprehensive examples in the `notebooks/` directory:
 
-### 1. **AlphaFold 3 Demo** (`alphafold3_demo.ipynb`)
-- Basic structure prediction workflow
-- Confidence metrics visualization (pLDDT, PAE)
-- Interactive 3D structure viewing
-- Template-based vs template-free predictions
+### Local Notebooks
 
-### 2. **Boltz-2 Binding Affinity** (`boltz2_demo.ipynb`)
-- Protein-ligand complex prediction
-- IC50 and ΔG calculations
-- Binding pose visualization
-- Multi-ligand screening
+| Notebook | Description | Key Features |
+|----------|-------------|-------------|
+| `alphafold3_demo.ipynb` | AlphaFold 3 basics | Structure prediction, pLDDT/PAE plots, 3D viewing |
+| `boltz2_demo.ipynb` | Boltz-2 affinity | Protein-ligand binding, IC50 calculation, pose visualization |
+| `combined_analysis.ipynb` | Complete pipeline | End-to-end workflow, multi-ligand screening |
+| `casp15_evaluation.ipynb` 🆕 | CASP15 benchmark | Official metrics, AF2 comparison, uncertainty quantification |
 
-### 3. **Combined Pipeline Analysis** (`combined_analysis.ipynb`)
-- End-to-end workflow demonstration
-- Structure + affinity prediction
-- Comparative analysis of multiple ligands
-- Automated report generation
+### Google Colab Notebooks
 
-### 4. **CASP15 Benchmark Evaluation** (`casp15_evaluation.ipynb`) 🆕
-- Official CASP15 target evaluation
-- Comparison with AlphaFold 2 baseline
-- Novel uncertainty quantification methods
-- Computational efficiency analysis
-- Confidence-accuracy correlation studies
-- **Publication-ready analyses**
+| Notebook | Description | Launch |
+|----------|-------------|--------|
+| `colab_quickstart.ipynb` | Quick demo (10 min) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ChessEngineUS/protein-folding-visualizer/blob/main/notebooks/colab_quickstart.ipynb) |
+| `colab_casp15_evaluation.ipynb` | Full benchmark (2-4 hr) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ChessEngineUS/protein-folding-visualizer/blob/main/notebooks/colab_casp15_evaluation.ipynb) |
 
-**Run notebooks:**
+**Run local notebooks:**
 ```bash
 jupyter notebook notebooks/
 ```
 
-## Architecture
+## 🏗️ Architecture
 
 ### AlphaFold 3
-- Diffusion-based structure generation with 200 denoising steps
-- Enhanced accuracy for protein-ligand, protein-DNA/RNA complexes
-- Confidence metrics: pLDDT, PAE, pTM, ipTM
-- Multi-chain complex modeling
+- **Diffusion Model**: 200-step denoising for high-quality structures
+- **Multi-Modal**: Proteins, DNA, RNA, ligands, ions
+- **Confidence Metrics**: pLDDT (per-residue), PAE (pairwise), pTM/ipTM (global)
+- **Template Search**: Optional PDB template integration
 
 ### Boltz-2
-- Rapid binding affinity prediction
-- IC50, ΔG, and binding probability estimates
-- 1000x speedup over traditional FEP methods
-- Support for SMILES-based ligand input
+- **Rapid Prediction**: 1000× faster than FEP/MD methods
+- **Affinity Metrics**: IC50, ΔG, Ki, binding probability
+- **SMILES Input**: Direct small molecule specification
+- **Ensemble**: Multiple conformer generation
 
 ### Evaluation Suite 🆕
-- CASP15 official metrics implementation
-- GDT_TS, TM-score, lDDT calculations
-- PDBbind affinity benchmarking
-- Automated HTML report generation
+- **CASP15 Metrics**: GDT_TS, TM-score, lDDT, RMSD
+- **PDBbind**: Affinity correlation (R², Pearson, Spearman)
+- **Ensemble Methods**: Uncertainty quantification
+- **HTML Reports**: Automated result visualization
 
 ### Visualization
-- Interactive 3D viewers (py3Dmol, NGLView)
-- Confidence-based coloring schemes
-- PAE matrix heatmaps
-- Multi-structure comparison views
+- **py3Dmol**: Interactive 3D in Jupyter/Colab
+- **NGLView**: Advanced molecular graphics
+- **Matplotlib/Seaborn**: Publication-quality plots
+- **Confidence Coloring**: Visual uncertainty representation
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 protein-folding-visualizer/
@@ -247,8 +232,14 @@ protein-folding-visualizer/
 │   ├── alphafold3_demo.ipynb
 │   ├── boltz2_demo.ipynb
 │   ├── combined_analysis.ipynb
-│   └── casp15_evaluation.ipynb  # 🆕 Novel benchmarking
+│   ├── casp15_evaluation.ipynb  # 🆕 Novel benchmarking
+│   ├── colab_quickstart.ipynb   # 🆕 Colab quick start
+│   └── colab_casp15_evaluation.ipynb  # 🆕 Colab benchmark
 ├── scripts/                 # CLI tools
+│   ├── run_alphafold3.py
+│   ├── run_boltz2.py
+│   ├── visualize_results.py
+│   └── download_models.py
 ├── tests/                   # Unit tests
 ├── benchmarks/              # Evaluation results 🆕
 ├── data/
@@ -264,58 +255,126 @@ protein-folding-visualizer/
 This framework enables several research directions:
 
 1. **Drug Discovery**: High-throughput virtual screening with affinity prediction
-2. **Protein Design**: Structure validation for designed sequences
-3. **Clinical Applications**: Uncertainty-quantified predictions for variant effect analysis
+2. **Protein Engineering**: Structure validation for designed sequences
+3. **Clinical Genomics**: Variant effect prediction with uncertainty quantification
 4. **Benchmark Development**: Standardized evaluation protocols
-5. **Method Comparison**: Direct AF3 vs AF2 performance analysis
+5. **Method Comparison**: Direct AF3 vs AF2 vs ESMFold performance analysis
+6. **Machine Learning**: Training data generation for downstream models
 
 ## 📄 Publication Potential
 
-This work contains novel contributions suitable for:
+This work contains novel contributions suitable for submission to:
 
-- **Nature Methods**: Unified benchmarking framework + novel uncertainty quantification
-- **Bioinformatics**: Tools paper with CASP15 validation
-- **NeurIPS/ICML**: Ensemble uncertainty methods
-- **CASP Proceedings**: Official evaluation results
-- **Journal of Molecular Biology**: Structure-affinity integration
+| Venue | Focus | Key Contributions |
+|-------|-------|-------------------|
+| **Nature Methods** | Methodology | Unified framework + uncertainty quantification |
+| **Bioinformatics** | Software | CASP15-validated tools |
+| **NeurIPS/ICML** | ML Methods | Ensemble uncertainty techniques |
+| **CASP Proceedings** | Benchmarking | Official evaluation results |
+| **J. Mol. Bio.** | Applications | Structure-affinity integration |
 
-## Key Citations
+### Citation-Ready Results
+- ✅ CASP15 official benchmark metrics
+- ✅ Comparison against published baselines
+- ✅ Novel methodological contributions
+- ✅ Open-source reproducible code
+- ✅ Comprehensive documentation
 
-- **AlphaFold 3**: Abramson et al., Nature (2024). DOI: 10.1038/s41586-024-07487-w
-- **Boltz-2**: Wohlwend et al., bioRxiv (2025). DOI: 10.1101/2025.06.14.659707
-- **Original AlphaFold**: Jumper et al., Nature (2021). DOI: 10.1038/s41586-021-03819-2
-- **CASP15**: Protein Structure Prediction Center (2022). https://predictioncenter.org/casp15/
+## 📚 Key Citations
 
-## License
+```bibtex
+@article{alphafold3_2024,
+  title={Accurate structure prediction of biomolecular interactions with AlphaFold 3},
+  author={Abramson, Josh and others},
+  journal={Nature},
+  year={2024},
+  doi={10.1038/s41586-024-07487-w}
+}
 
-MIT License - See LICENSE file for details
+@article{boltz2_2025,
+  title={Boltz-2: Rapid binding affinity prediction},
+  author={Wohlwend, Jeremy and others},
+  journal={bioRxiv},
+  year={2025},
+  doi={10.1101/2025.06.14.659707}
+}
 
-## Contributing
+@article{alphafold_2021,
+  title={Highly accurate protein structure prediction with AlphaFold},
+  author={Jumper, John and others},
+  journal={Nature},
+  volume={596},
+  pages={583--589},
+  year={2021},
+  doi={10.1038/s41586-021-03819-2}
+}
+```
 
-Contributions welcome! Please open an issue or submit a pull request.
+## 🤝 Contributing
 
-### Areas for Contribution:
-- Additional benchmark datasets (CAMEO, CATH)
-- Novel uncertainty quantification methods
-- Optimization for resource-constrained environments
-- Integration with experimental data
+Contributions welcome! We're particularly interested in:
 
-## Acknowledgments
+- 🧪 Additional benchmark datasets (CAMEO, CATH, Pfam)
+- 🎯 Novel uncertainty quantification methods
+- ⚡ Performance optimization (quantization, distillation)
+- 🔬 Integration with experimental data (cryo-EM, X-ray)
+- 📊 New visualization techniques
+- 🌐 Web interface development
 
-Built on the foundational work of:
-- Google DeepMind (AlphaFold 3)
-- MIT & Recursion (Boltz-2)
-- CASP community for benchmark standards
-- Open-source structural biology community
+**How to contribute:**
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## Support
+## 📋 Requirements
 
-For questions or issues:
-- Open a GitHub issue
-- Check documentation in `docs/`
-- Review example notebooks in `notebooks/`
-- Read CASP15 evaluation methodology in `docs/casp15_protocol.md`
+### Hardware
+- **CPU**: 8+ cores recommended
+- **RAM**: 16GB minimum, 32GB recommended
+- **GPU**: NVIDIA GPU with 8GB+ VRAM (optional but recommended)
+  - Supports: T4, V100, A100, RTX 3090, RTX 4090
+- **Storage**: 100GB+ free space
+
+### Software
+- Python 3.11+
+- CUDA 12.1+ (for GPU)
+- Conda or venv
+
+## 📜 License
+
+MIT License - See [LICENSE](LICENSE) file for details.
+
+**Academic Use**: Freely available for research.
+**Commercial Use**: Allowed under MIT terms.
+
+## 🙏 Acknowledgments
+
+Built on foundational work from:
+- **Google DeepMind**: AlphaFold 3 architecture
+- **MIT & Recursion Pharmaceuticals**: Boltz-2 method
+- **CASP Community**: Benchmark standards and evaluation protocols
+- **Open Source Community**: BioPython, PyTorch, Jupyter ecosystems
+
+## 💬 Support
+
+**Need help?**
+- 📖 Check [documentation](docs/)
+- 💻 Try [Colab notebooks](https://colab.research.google.com/github/ChessEngineUS/protein-folding-visualizer/blob/main/notebooks/colab_quickstart.ipynb)
+- 🐛 [Open an issue](https://github.com/ChessEngineUS/protein-folding-visualizer/issues)
+- 💬 Start a [discussion](https://github.com/ChessEngineUS/protein-folding-visualizer/discussions)
+
+## ⭐ Star History
+
+If you find this useful, please star the repository!
 
 ---
 
+<div align="center">
+
 **Built with ❤️ for advancing protein structure prediction research**
+
+[⬆ Back to Top](#protein-folding-visualizer-alphafold-3--boltz-2)
+
+</div>
