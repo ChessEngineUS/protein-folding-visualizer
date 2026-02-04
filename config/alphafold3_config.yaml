@@ -1,0 +1,41 @@
+# AlphaFold 3 Configuration
+
+# Model settings
+model:
+  model_dir: ./models/alphafold3
+  use_gpu: true
+  num_gpus: 1
+  precision: fp16  # fp16, fp32, or bf16
+
+# Database paths
+databases:
+  uniref90: ./databases/uniref90/uniref90.fasta
+  mgnify: ./databases/mgnify/mgy_clusters.fa
+  pdb_templates: ./databases/pdb_mmcif/mmcif_files
+  pdb_seqres: ./databases/pdb_seqres/pdb_seqres.txt
+
+# Prediction parameters
+prediction:
+  num_recycling: 3
+  num_diffusion_steps: 200
+  use_templates: true
+  max_template_date: "2026-02-01"
+  msa_mode: full  # full, reduced, or none
+
+# MSA parameters
+msa:
+  max_sequences: 10000
+  max_extra_msa: 5000
+  num_ensemble: 1
+
+# Output settings
+output:
+  save_recycling_intermediates: false
+  save_all_models: false
+  ranking_method: plddt  # plddt or ptm
+
+# Performance
+performance:
+  batch_size: 1
+  use_mixed_precision: true
+  gradient_checkpointing: true
